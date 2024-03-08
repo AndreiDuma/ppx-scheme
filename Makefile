@@ -1,8 +1,14 @@
-all: ppx
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+OUT = ppx
 
-ppx: ppx.c
-	cc -o ppx ppx.c
+# CC      = gcc
+# CFLAGS  = -Wall -I /additional/include/dir
+# LDFLAGS = -L /additional/lib/dir
+# LDLIBS  = -ldependency1 -ldependency2
+
+$(OUT): $(OBJFILES)
 
 .PHONY: clean
 clean:
-	rm ppx
+	rm -f $(OBJFILES) $(OUT)
