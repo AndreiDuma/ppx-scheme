@@ -110,9 +110,22 @@ typedef struct ppx_symbol {
     char *name;
 } ppx_symbol_t;
 
+const size_t PPX_MAX_SYMBOLS = 1024;
+ppx_symbol_t ppx_symbol_table[PPX_MAX_SYMBOLS];
+size_t ppx_next_symbol_id = 0;
+
 ppx_value_t *ppx_symbol(const char *name) {
-    // TODO: If symbol already exists, return it. Otherwise create a new one (intern it).
-    ppx_symbol_t *s = (ppx_symbol_t *) malloc(sizeof(*s));
+    for (int i = 0; i < ppx_next_symbol_id; i++) {
+	ppx_symbol_t *s = &ppx_symbol_table[i];
+	if (strcmp(name, s->name) == 0) {
+	    return (ppx_value_t *)s;
+	}
+    }
+    if (ppx_next_symbol_id >= PPX_MAX_SYMBOLS) {
+	fprintf(stderr, "symbol: too many symbols");
+	exit(-1);
+    }
+    ppx_symbol_t *s = &ppx_symbol_table[ppx_next_symbol_id++];
     s->type = PPX_TYPE_SYMBOL;
     s->name = strdup(name);
     return (ppx_value_t *)s;
