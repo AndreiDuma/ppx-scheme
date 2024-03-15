@@ -1,4 +1,5 @@
 SRC = $(wildcard *.c)
+HDR = $(wildcard *.h)
 OBJ = $(SRC:.c=.o)
 OUT = ppx
 
@@ -7,7 +8,7 @@ OUT = ppx
 # LDFLAGS = -L /additional/lib/dir
 # LDLIBS  = -ldependency1 -ldependency2
 
-$(OUT): $(OBJFILES)
+$(OUT): $(OBJFILES) $(HDR)
 
 .PHONY: clean
 clean:
