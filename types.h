@@ -1,6 +1,7 @@
 #ifndef PPX_TYPES_H
 #define PPX_TYPES_H
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 /**
@@ -79,6 +80,14 @@ ppx_value_t *ppx_cons(ppx_value_t *car, ppx_value_t *cdr) {
 
 bool ppx_is_cons(ppx_value_t *v) { return ppx_typeof(v) == PPX_TYPE_CONS; }
 
+void ppx_cons_set_car(ppx_value_t *cons, ppx_value_t *v) {
+    ((ppx_cons_t *)cons)->car = v;
+}
+
+void ppx_cons_set_cdr(ppx_value_t *cons, ppx_value_t *v) {
+    ((ppx_cons_t *)cons)->cdr = v;
+}
+
 /**
  * Null.
  */
@@ -101,7 +110,7 @@ typedef struct ppx_symbol {
 } ppx_symbol_t;
 
 ppx_value_t *ppx_symbol(char *name) {
-    // TODO: If symbol already exists, return it. Otherwise create a new one.
+    // TODO: If symbol already exists, return it. Otherwise create a new one (intern it).
     ppx_symbol_t *s = (ppx_symbol_t *) malloc(sizeof(*s));
     s->type = PPX_TYPE_SYMBOL;
     s->name = name;

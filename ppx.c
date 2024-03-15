@@ -1,9 +1,4 @@
-#include <ctype.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "types.h"
 #include "read.h"
@@ -14,7 +9,7 @@ int main() {
     do {
 	// Read.
 	printf("> ");
-	ppx_value_t *e = ppx_read();
+	ppx_value_t *e = ppx_read(stdin);
 	if (ppx_is_eof(e)) {
 	    break;
 	}

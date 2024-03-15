@@ -9,12 +9,12 @@
 #include "types.h"
 #include "list.h"
 
-int fpeek(FILE *stream) {
-    const int c = fgetc(stream);
-    ungetc(c, stream);
+/* int fpeek(FILE *stream) { */
+/*     const int c = fgetc(stream); */
+/*     ungetc(c, stream); */
 
-    return c;
-}
+/*     return c; */
+/* } */
 
 typedef enum ppx_token_type {
     PPX_TOKEN_ERROR,
@@ -31,11 +31,11 @@ typedef enum ppx_token_type {
 
 const size_t PPX_MAX_TOKEN_LENGTH = 256;
 
-ppx_token_type_t ppx_read_token(char *token) {
+ppx_token_type_t ppx_read_token(FILE *in, char *token) {
     int c;
     // First, skip all whitespace.
     do {
-	c = getc(stdin);
+	c = fgetc(in);
     } while (isspace(c));
 
     switch (c) {
@@ -55,7 +55,7 @@ ppx_token_type_t ppx_read_token(char *token) {
             return PPX_TOKEN_UNQUOTE_SPLICING;
         }
         // Simple unquote.
-        ungetc(c, stdin);
+        ungetc(c, in);
         return PPX_TOKEN_UNQUOTE;
     }
     default: {
@@ -92,11 +92,11 @@ ppx_token_type_t ppx_read_token(char *token) {
     }
 }
 
-ppx_value_t *ppx_read_into(ppx_value_t *list) {
+ppx_value_t *ppx_read_into(FILE *in, ppx_value_t *list) {
     ppx_value_t *ret;
     while (true) {
         char token[PPX_MAX_TOKEN_LENGTH];
-        switch (ppx_read_token(token)) {
+        switch (ppx_read_token(in, token)) {
         case PPX_TOKEN_ERROR: {
             fprintf(stderr, "max token length exceeded\n");
             exit(-1);
@@ -106,7 +106,7 @@ ppx_value_t *ppx_read_into(ppx_value_t *list) {
 	}
         case PPX_TOKEN_LEFT_PAREN: {
             // Call recursively, creating an implicit stack.
-            ret = ppx_read_into(PPX_NULL);
+            ret = ppx_read_into(in, PPX_NULL);
             break;
         }
         case PPX_TOKEN_RIGHT_PAREN: {
@@ -136,8 +136,8 @@ ppx_value_t *ppx_read_into(ppx_value_t *list) {
     }
 }
 
-ppx_value_t *ppx_read(void) {
-    return ppx_read_into(NULL);
+ppx_value_t *ppx_read(FILE *in) {
+    return ppx_read_into(in, NULL);
 }
 
 #endif
