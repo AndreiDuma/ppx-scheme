@@ -8,7 +8,7 @@
 int main() {
     do {
 	// Read.
-	printf("> ");
+	printf("ppx> ");
 	ppx_value_t *e = ppx_read(stdin);
 	if (ppx_is_eof(e)) {
 	    break;
