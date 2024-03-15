@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Types
@@ -109,11 +110,11 @@ typedef struct ppx_symbol {
     char *name;
 } ppx_symbol_t;
 
-ppx_value_t *ppx_symbol(char *name) {
+ppx_value_t *ppx_symbol(const char *name) {
     // TODO: If symbol already exists, return it. Otherwise create a new one (intern it).
     ppx_symbol_t *s = (ppx_symbol_t *) malloc(sizeof(*s));
     s->type = PPX_TYPE_SYMBOL;
-    s->name = name;
+    s->name = strdup(name);
     return (ppx_value_t *)s;
 }
 
