@@ -7,11 +7,11 @@
  * Types
  */
 typedef enum ppx_type {
-    PPX_TYPE_SYMBOL,
-    PPX_TYPE_BOOLEAN,
     PPX_TYPE_INTEGER,
+    PPX_TYPE_BOOLEAN,
     PPX_TYPE_CONS,
     PPX_TYPE_NULL,
+    PPX_TYPE_SYMBOL,
     PPX_TYPE_EOF,
 } ppx_type_t;
 
@@ -21,43 +21,6 @@ typedef enum ppx_type {
 typedef struct ppx_value ppx_value_t;
 
 ppx_type_t ppx_typeof(ppx_value_t *v) { return *((ppx_type_t *)v); }
-
-/**
- * Symbols.
- */
-typedef struct ppx_symbol {
-    ppx_type_t type;
-    char *name;
-} ppx_symbol_t;
-
-ppx_value_t *ppx_symbol(char *name) {
-    // TODO: If symbol already exists, return it. Otherwise create a new one.
-    ppx_symbol_t *s = (ppx_symbol_t *) malloc(sizeof(*s));
-    s->type = PPX_TYPE_SYMBOL;
-    s->name = name;
-    return (ppx_value_t *)s;
-}
-
-bool ppx_is_symbol(ppx_value_t *v) { return ppx_typeof(v) == PPX_TYPE_SYMBOL; }
-
-/**
- * Booleans.
- */
-typedef struct ppx_boolean {
-    ppx_type_t type;
-    bool value;
-} ppx_boolean_t;
-
-ppx_value_t *ppx_boolean(const bool value) {
-    ppx_boolean_t *b = (ppx_boolean_t *)malloc(sizeof(*b));
-    b->type = PPX_TYPE_BOOLEAN;
-    b->value = value;
-    return (ppx_value_t *)b;
-}
-
-bool ppx_is_boolean(ppx_value_t *v) {
-    return ppx_typeof(v) == PPX_TYPE_BOOLEAN;
-}
 
 /**
  * Integers.
@@ -76,6 +39,25 @@ ppx_value_t *ppx_integer(const int64_t value) {
 
 bool ppx_is_integer(ppx_value_t *v) {
     return ppx_typeof(v) == PPX_TYPE_INTEGER;
+}
+
+/**
+ * Booleans.
+ */
+typedef struct ppx_boolean {
+    ppx_type_t type;
+    bool value;
+} ppx_boolean_t;
+
+ppx_value_t *ppx_boolean(const bool value) {
+    ppx_boolean_t *b = (ppx_boolean_t *)malloc(sizeof(*b));
+    b->type = PPX_TYPE_BOOLEAN;
+    b->value = value;
+    return (ppx_value_t *)b;
+}
+
+bool ppx_is_boolean(ppx_value_t *v) {
+    return ppx_typeof(v) == PPX_TYPE_BOOLEAN;
 }
 
 /**
@@ -109,6 +91,24 @@ const ppx_null_t _PPX_NULL = {PPX_TYPE_NULL};
 ppx_value_t *PPX_NULL = (ppx_value_t *)&_PPX_NULL;
 
 bool ppx_is_null(ppx_value_t *v) { return ppx_typeof(v) == PPX_TYPE_NULL; }
+
+/**
+ * Symbols.
+ */
+typedef struct ppx_symbol {
+    ppx_type_t type;
+    char *name;
+} ppx_symbol_t;
+
+ppx_value_t *ppx_symbol(char *name) {
+    // TODO: If symbol already exists, return it. Otherwise create a new one.
+    ppx_symbol_t *s = (ppx_symbol_t *) malloc(sizeof(*s));
+    s->type = PPX_TYPE_SYMBOL;
+    s->name = name;
+    return (ppx_value_t *)s;
+}
+
+bool ppx_is_symbol(ppx_value_t *v) { return ppx_typeof(v) == PPX_TYPE_SYMBOL; }
 
 /**
  * EOF.

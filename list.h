@@ -9,15 +9,20 @@
  * List utilities.
  */
 bool ppx_is_list(ppx_value_t *v) {
-    // TODO: implement iteratively.
-    if (ppx_is_null(v))
-	return true;
-    if (ppx_is_cons(v))
-	return ppx_is_list(((ppx_cons_t *)v)->cdr);
-    return false;
+    // Assumes a cdr-finite value is given.
+    while (true) {
+	if (ppx_is_null(v)) {
+	    return true;
+	} else if (ppx_is_cons(v)) {
+	    v = ((ppx_cons_t *)v)->cdr;
+	} else {
+	    return false;
+	}
+    }
 }
 
 int64_t ppx_list_length(ppx_value_t *v) {
+    // Assumes a proper list is given.
     int64_t length = 0;
     while (true) {
 	if (ppx_is_null(v))
@@ -33,6 +38,7 @@ int64_t ppx_list_length(ppx_value_t *v) {
 }
 
 ppx_value_t *ppx_list_reverse(ppx_value_t *list) {
+    // Assumes a proper list is given.
     ppx_value_t *prev = PPX_NULL, *next;
     while (true) {
 	if (ppx_is_null(list))
