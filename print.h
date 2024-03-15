@@ -50,14 +50,23 @@ void ppx_print(ppx_value_t *v) {
     case PPX_TYPE_INTEGER:
 	ppx_print_integer((ppx_integer_t *)v);
 	break;
-    case PPX_TYPE_CONS:
-	ppx_print_cons((ppx_cons_t *)v, true);
+    case PPX_TYPE_CONS: {
+	ppx_cons_t *c = (ppx_cons_t *)v;
+	if (c->car == ppx_symbol("quote")) {
+	    printf("'");
+	    ppx_print(c->cdr);
+	} else {
+	    ppx_print_cons(c, true);
+	}
 	break;
+    }
     case PPX_TYPE_NULL:
 	ppx_print_null();
 	break;
-    case PPX_TYPE_EOF:
+    case PPX_TYPE_EOF: {
 	ppx_print_eof();
+	break;
+    }
     }
 }
 

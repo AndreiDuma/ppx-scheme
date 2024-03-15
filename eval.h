@@ -21,11 +21,13 @@ ppx_value_t *ppx_eval(ppx_value_t *e) {
     } else if (ppx_is_symbol(e)) {
 	return e;
     } else if (ppx_is_cons(e)) {
-	ppx_cons_t *e = (ppx_cons_t *)e;
-	if (e->car == ppx_symbol("lambda")) {
-	    return ppx_eval_lambda(e);
+	ppx_cons_t *c = (ppx_cons_t *)c;
+	if (c->car == ppx_symbol("quote")) {
+	    return c->cdr;
+	} else if (c->car == ppx_symbol("lambda")) {
+	    return ppx_eval_lambda(c);
 	} else
-	    return ppx_eval_application(e);
+	    return ppx_eval_application(c);
     } else if (ppx_is_null(e)) {
 	return e;
     } else if (ppx_is_eof(e)) {

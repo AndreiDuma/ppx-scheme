@@ -112,6 +112,12 @@ ppx_value_t *ppx_read_into(FILE *in, ppx_value_t *list) {
         case PPX_TOKEN_RIGHT_PAREN: {
             return ppx_list_reverse(list);
         }
+	case PPX_TOKEN_QUOTE: {
+	    // Read another datum and wrap it in a quote.
+	    ppx_value_t *next = ppx_read_into(in, list);
+	    ret = ppx_cons(ppx_symbol("quote"), next);
+	    break;
+	}
         case PPX_TOKEN_NUMERIC: {
             const int64_t value = atol(token);
             ret = ppx_integer(value);
